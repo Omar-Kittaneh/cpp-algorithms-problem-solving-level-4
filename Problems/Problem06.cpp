@@ -27,7 +27,7 @@ short NumberOfDaysInAMonth(short Month, short Year) {
         return 0;
     }
     int NumberOfDays[13] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-   return (Month == 2) ? (IsLeapYear(Year) ? 29 : 28) : NumberOfDays[Month - 1] + NumberOfDays[Month - 1];
+   return (Month == 2) ? (IsLeapYear(Year) ? 29 : 28) : NumberOfDays[Month - 1] ;
 }
 
 short NumberOfHoursInAMonth(short Month, short Year)
