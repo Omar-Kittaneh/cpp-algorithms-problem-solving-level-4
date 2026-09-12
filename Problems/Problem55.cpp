@@ -137,6 +137,9 @@ stDate CalculateVacationReturnDate(stDate DateFrom, short VacationDays) {
         }
         ReturnDate = IncreaseDateByOneDay(ReturnDate);
     }
+    while (IsWeekEnd(ReturnDate)) {
+        ReturnDate = IncreaseDateByOneDay(ReturnDate);
+    }
     return ReturnDate;
 }
 
