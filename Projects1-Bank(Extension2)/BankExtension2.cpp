@@ -455,11 +455,13 @@ bool DeleteClientByAccountNumber(vector<sClient>& vClients) {
 
     if (Index != -1) {
         ShowClientCard(vClients[Index]);
+
         char Answer = 'n';
         cout << "\nAre you sure you want to delete this client? (y/n): ";
         cin >> Answer;
 
         if (Answer == 'y' || Answer == 'Y') {
+            // 3. تعديل مباشر بدون أي Loop إضافي
             vClients[Index].MarkForDelete = true;
             SaveClientsDataToFile(ClientsFileName, vClients);
             vClients = LoadDataFromFile(ClientsFileName);
@@ -469,37 +471,14 @@ bool DeleteClientByAccountNumber(vector<sClient>& vClients) {
         cout << "\n\nDelete Operation Cancelled.\n";
         return false;
     }
-    cout << "\nClient with Account Number (" << AccountNumber << ") is Not Found!\n";
-    return false;
-}
 
-bool UpdateClientByAccountNumber(vector<sClient>& vClients) {
-    ShowNameScreen("Update Clients");
-    string AccountNumber = ReadClientAccountNumber();
-
-    short Index = FindClientIndex(vClients, AccountNumber);
-
-    if (Index != -1) {
-        ShowClientCard(vClients[Index]);
-        char Answer = 'n';
-        cout << "\nAre you sure you want to Update this client? (y/n): ";
-        cin >> Answer;
-
-        if (Answer == 'y' || Answer == 'Y') {
-            vClients[Index] = ChangeClientRecord(AccountNumber);
-            SaveClientsDataToFile(ClientsFileName, vClients);
-            cout << "\n\nClient Updated Successfully.\n";
-            return true;
-        }
-        cout << "\n\nUpdate Operation Cancelled.\n";
-        return false;
-    }
     cout << "\nClient with Account Number (" << AccountNumber << ") is Not Found!\n";
     return false;
 }
 
 bool DeleteUserByUserName(vector<sUser>& vUsers) {
     ShowNameScreen("Delete Users");
+    sUser User;
     string UserName = ReadUserName();
 
     if (UserName == "Admin" || UserName == "admin") {
@@ -507,15 +486,14 @@ bool DeleteUserByUserName(vector<sUser>& vUsers) {
         return false;
     }
 
-    short Index = FindUserIndex(vUsers, UserName);
-
-    if (Index != -1) {
-        ShowUserCard(vUsers[Index]);
+    if (FindUserByUserName(vUsers, User, UserName)) {
+        ShowUserCard(User);
         char Answer = 'n';
         cout << "\nAre you sure you want to delete this User? (y/n): ";
         cin >> Answer;
 
         if (Answer == 'y' || Answer == 'Y') {
+            short Index = FindUserIndex(vUsers, UserName);
             vUsers[Index].MarkForDelete = true;
             SaveUserDataToFile(UsersFileName, vUsers);
             vUsers = LoadDataFromFileUser(UsersFileName);
@@ -529,19 +507,44 @@ bool DeleteUserByUserName(vector<sUser>& vUsers) {
     return false;
 }
 
+bool UpdateClientByAccountNumber(vector<sClient>& vClients) {
+    ShowNameScreen("Update Clients");
+    sClient Client;
+    string AccountNumber = ReadClientAccountNumber();
+
+    if (FindClientByAccountNumber(vClients, Client, AccountNumber)) {
+        ShowClientCard(Client);
+        char Answer = 'n';
+        cout << "\nAre you sure you want to Update this client? (y/n): ";
+        cin >> Answer;
+
+        if (Answer == 'y' || Answer == 'Y') {
+            short Index = FindClientIndex(vClients, AccountNumber);
+            vClients[Index] = ChangeClientRecord(AccountNumber);
+            SaveClientsDataToFile(ClientsFileName, vClients);
+            cout << "\n\nClient Updated Successfully.\n";
+            return true;
+        }
+        cout << "\n\nUpdate Operation Cancelled.\n";
+        return false;
+    }
+    cout << "\nClient with Account Number (" << AccountNumber << ") is Not Found!\n";
+    return false;
+}
+
 bool UpdateUserByUserName(vector<sUser>& vUsers) {
     ShowNameScreen("Update Users");
+    sUser User;
     string UserName = ReadUserName();
 
-    short Index = FindUserIndex(vUsers, UserName);
-
-    if (Index != -1) {
-        ShowUserCard(vUsers[Index]);
+    if (FindUserByUserName(vUsers, User, UserName)) {
+        ShowUserCard(User);
         char Answer = 'n';
         cout << "\nAre you sure you want to Update this User? (y/n): ";
         cin >> Answer;
 
         if (Answer == 'y' || Answer == 'Y') {
+            short Index = FindUserIndex(vUsers, UserName);
             vUsers[Index] = ChangeUserRecord(UserName);
             SaveUserDataToFile(UsersFileName, vUsers);
             cout << "\n\nUser Updated Successfully.\n";
